@@ -1,0 +1,67 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET            /                                              controllers.Application.index
+
+POST           /api/questions                                 restapis.QuestionRest.create
+GET            /api/questions                                 restapis.QuestionRest.list
+GET            /api/questions/:alias                          restapis.QuestionRest.get(alias)
+POST           /api/questions/confirm                         restapis.QuestionRest.confirm
+GET            /api/questions/search                          restapis.QuestionRest.search
+
+POST           /api/questions/:questionId                     restapis.AnswerRest.create(questionId)
+GET            /api/questions/:questionId/answers             restapis.QuestionRest.getAnswers(questionId)
+
+POST           /api/comments/:target/:targetId                restapis.CommentRest.create(target, targetId)
+GET            /api/comments/:target/:targetId                restapis.CommentRest.list(target, targetId)
+
+
+POST           /api/topics                                    restapis.TopicRest.create
+POST           /api/topics/search                             restapis.TopicRest.search
+GET            /api/topics/:alias/questions                   restapis.TopicRest.getQuestions(alias)
+
+# USER-FEED
+POST           /api/users/follow/topics                       restapis.UserRest.followTopics
+GET            /api/users/follow/topics                       restapis.UserRest.getFollowTopics
+GET            /api/users/follow/users                        restapis.UserRest.getFollowUsers
+GET            /api/users/followings                          restapis.UserRest.getFollowingUsers
+POST           /api/users/follow/topics/:topicId              restapis.UserRest.followTopic(topicId)
+POST           /api/users/follow/questions/:questionId        restapis.UserRest.followQuestion(questionId)
+POST           /api/users/follow/users/:userId                restapis.UserRest.followUser(userId)
+
+DELETE         /api/users/follow/topics/:topicId              restapis.UserRest.unFollowTopic(topicId)
+DELETE         /api/users/follow/questions/:questionId        restapis.UserRest.unFollowQuestion(questionId)
+DELETE         /api/users/follow/users/:userId                restapis.UserRest.unFollowUser(userId)
+
+POST           /api/users/voteup/:target/:targetId            restapis.UserRest.voteUp(target, targetId)
+DELETE         /api/users/voteup/:target/:targetId            restapis.UserRest.deleteVoteUp(target, targetId)
+POST           /api/users/votedown/:target/:targetId          restapis.UserRest.voteDown(target, targetId)
+DELETE         /api/users/votedown/:target/:targetId          restapis.UserRest.deleteVoteDown(target, targetId)
+
+# User
+POST           /api/users                                     restapis.UserRest.create
+PUT            /api/users                                     restapis.UserRest.updatePassword
+GET            /api/users/notify                              restapis.UserRest.getNotifications
+GET            /api/users/unread                              restapis.UserRest.getUnread
+GET            /api/users/:alias/questions                    restapis.UserRest.getQuestions(alias)
+GET            /api/users/questions                           restapis.UserRest.getOwnerQuestions
+
+
+GET            /oauth2/access_token                           controllers.OAuth2Controller.signIn
+DELETE         /oauth2/access_token                           controllers.OAuth2Controller.signOut
+PUT            /oauth2/fb/login                               controllers.OAuth2Controller.signInFb
+
+
+POST           /media/image/upload                            controllers.Media.upload
+
+
+GET            /admin/api/contents                            restapis.AdminRest.getContents
+GET            /admin/api/comments                            restapis.AdminRest.getComments
+GET            /admin/api/tags                                restapis.AdminRest.getTags
+POST           /admin/api/tags                                restapis.AdminRest.createTag
+
+# Map static resources from the /public folder to the /assets URL path
+OPTIONS        /*path                                         controllers.Application.options(path)
+GET            /assets/*file                                  controllers.Assets.at(path="/public", file)

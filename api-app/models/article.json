@@ -1,0 +1,108 @@
+{
+    "name": "article",
+    "fields": {
+        "id" : {
+            "type" : "UUID",
+            "primary": true
+        },
+        "user_id" : {
+            "type" : "UUID",
+            "reference": "User",
+            "filterable": true
+        },
+        "type": {
+            "type": "String",
+            "validate": [
+
+            ],
+            "filterable": true
+        },
+        "title": {
+            "type": "String"
+        },
+        "alias" : {
+            "type": "String",
+            "util": "alias",
+            "params": ["title"]
+        },
+        "content": {
+            "type": "String"
+        },
+        "vote_up": {
+            "type": "Long",
+            "model-name": "voteUp"
+        },
+        "vote_down": {
+            "type": "Long",
+            "model-name": "voteDown"
+        },
+        "view" : {
+            "type": "Long"
+        },
+        "created_date": {
+            "type": "DateTime",
+            "default": "now",
+            "model-name": "createdDate"
+        },
+        "updated_date": {
+            "type": "DateTime",
+            "default": "now",
+            "model-name": "updatedDate"
+        },
+        "score": {
+            "type": "Long",
+            "util": "score",
+            "params": ["created_date", "vote_up", "vote_down"]
+        }
+    },
+    "crud": {
+        "create" : {
+            "after" : ""
+        },
+        "update": {
+
+        },
+        "delete" : {
+
+        }
+    },
+    "functions": {
+        "filters": {
+            "user" : {
+                "field": "user_id",
+                "all": "ALL"
+            },
+            "type" : {
+                "field": "type",
+                "all": "ALL"
+            }
+        },
+        "sorts" : {
+            "hot": {
+                "field": "score"
+            },
+            "top": {
+                "util": "top",
+                "params": ["vote_up", "vote_down"]
+            },
+            "new": {
+                "field": "created_date"
+            }
+        },
+        "vote": {
+            "up": {
+                "field": "vote_up",
+                "step": 1,
+                "after" : {
+                    "update_score" : {
+
+                    }
+                }
+            },
+            "down": {
+                "field": "vote_down",
+                "step": 1
+            }
+        }
+    }
+}

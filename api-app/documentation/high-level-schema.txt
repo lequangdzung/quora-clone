@@ -1,0 +1,469 @@
+User:
+ - email : (key)
+ - password : String
+ - permission : Set <String>
+ - status : Boolean
+ - following: Map <String, String>
+ - label (user can create label) : Set <String>
+ - created : timestamp
+ 
+UserStatic
+ - WHOLE (key) : email, data (column)																						
+ - ACTIVED (key) : email, data (column)
+ - UNACTIVE (key) : email, data (column)
+ 
+
+--------------------------------------------------------------------------------
+Content:
+ - id (key)
+ - creator: String (email of user)
+ - title: String
+ - Description: String
+ - Body : String
+ - Created: Timestamp
+ - Updated: Timestamp
+ - Status: Int
+
+ ContentStatic
+  - WHOLE (key): weigh_of_content(Long), contentId (column)
+  - DRAFT (key): weigh_of_content(Long), contentId (column)
+  - POPULAR (key): weigh_of_content(Long), contentId (column)
+
+--------------------------------------------------------------------------------
+
+UserContent
+ - {username}{label} (key) : weigh_of_content(Long), contentId
+
+ -------------------------------------------------------------------------------
+CREATE KEYSPACE balloontest WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1};
+
+USE balloontest;
+
+CREATE TABLE tag (
+    id timeuuid PRIMARY KEY,
+    user_id uuid,
+    updated timestamp,
+    name text,
+    img text,
+    info text,
+    status boolean
+);
+
+ALTER TABLE tag ADD alias text;
+
+CREATE TABLE user (
+ 	id timeuuid PRIMARY KEY,
+ 	email text,
+ 	password text,
+ 	display text,
+ 	avatar text,
+ 	created timestamp,
+ 	status boolean,
+ 	permissions set<text>,
+ 	info map<text, text>,
+ 	unread set<text>,
+ 	score map<text, bigint>
+);
+
+ALTER TABLE user ADD alias text;
+ALTER TABLE user ADD fbid text;
+
+CREATE INDEX user_email ON user(email) ;
+CREATE INDEX user_password ON user(password) ;
+CREATE INDEX user_status ON user(status)  ;
+
+CREATE TABLE user_tag (
+	user_id timeuuid,
+	tag_id timeuuid,
+	time timestamp,
+	PRIMARY KEY (user_id, tag_id)
+);
+
+CREATE TABLE user_user (
+	user_id timeuuid,
+	other_id timeuuid,
+	time timestamp,
+	PRIMARY KEY (user_id, other_id)
+);
+
+CREATE TABLE tag_user (
+	tag_id timeuuid,
+	user_id timeuuid,
+	time timestamp,
+	PRIMARY KEY (tag_id, user_id)
+);
+
+CREATE TABLE user_string_unique (
+    field text,
+    value text,
+    user_id timeuuid,
+    PRIMARY KEY (field, value)
+);
+
+CREATE TABLE user_vote (
+    user_id timeuuid,
+    content_id timeuuid,
+    type text,
+    PRIMARY KEY (user_id, content_id)
+);
+
+CREATE TABLE content (
+	id timeuuid PRIMARY KEY,
+	creator uuid,
+	title text,
+	body text,
+	bodyText text,
+	format text,
+	images list<text>,
+	videos list<text>,
+	thumb text,
+	tags Set<uuid>,
+	type text,
+	url text,
+	created timestamp,
+	updated timestamp,
+	status int,
+	vote_up bigint,
+	vote_down bigint,
+	view bigint,
+    score bigint,
+    comment_count bigint
+);
+
+ALTER TABLE content ADD alias text;
+
+CREATE TABLE content_string_unique (
+    field text,
+    value text,
+    content_id timeuuid,
+    PRIMARY KEY (field, value)
+);
+
+CREATE TABLE content_counter (
+    id timeuuid PRIMARY KEY,
+    vote_up counter,
+    vote_down counter,
+    view counter
+);
+
+ALTER TABLE content_counter ADD comment_count counter;
+
+CREATE TABLE content_score (
+    key text,
+    score bigint,
+    content_id timeuuid,
+    updated timestamp,
+    PRIMARY KEY (key, score, content_id)
+);
+
+CREATE TABLE content_score_track(
+    key text,
+    content_id timeuuid,
+    score bigint,
+    PRIMARY KEY (key, content_id)
+);
+
+CREATE TABLE content_vote (
+    key text,
+    vote bigint,
+    content_id timeuuid,
+    updated timestamp,
+    PRIMARY KEY (key, vote, content_id)
+);
+
+CREATE TABLE content_vote_track(
+    key text,
+    content_id timeuuid,
+    vote bigint,
+    PRIMARY KEY (key, content_id)
+);
+
+CREATE TABLE content_date (
+    key text,
+    updated timestamp,
+    content_id timeuuid,
+    prev timestamp,
+    PRIMARY KEY (key, updated, content_id)
+);
+
+CREATE TABLE content_date_track(
+    key text,
+    content_id timeuuid,
+    updated timestamp,
+    PRIMARY KEY (key, content_id)
+);
+
+CREATE TABLE content_user(
+    content_id timeuuid,
+    user_id timeuuid,
+    time timestamp,
+    PRIMARY KEY (content_id, user_id)
+);
+
+CREATE TABLE access_token (
+    id text PRIMARY KEY,
+    refresh_token timeuuid,
+    auth_info_id timeuuid,
+    scope text,
+    expires_in bigint,
+    created_at timestamp
+);
+
+CREATE TABLE access_token_expire (
+    key text,
+    expire timestamp,
+    token_id text,
+    PRIMARY KEY (key, expire)
+);
+
+CREATE TABLE auth_info (
+    id timeuuid PRIMARY KEY,
+    user_id timeuuid,
+    client_id text,
+    scope text,
+    redirect_uri text
+);
+
+CREATE TABLE comment (
+	id timeuuid PRIMARY KEY,
+	content uuid,
+	creator uuid,
+	body text,
+	created timestamp,
+	status int,
+	vote_up bigint,
+	vote_down bigint,
+	view bigint,
+    score bigint
+);
+
+
+CREATE TABLE comment_score (
+    key text,
+    score bigint,
+    comment_id timeuuid,
+    updated timestamp,
+    PRIMARY KEY (key, score, comment_id)
+);
+
+CREATE TABLE comment_score_track(
+    key text,
+    comment_id timeuuid,
+    score bigint,
+    PRIMARY KEY (key, comment_id)
+);
+
+CREATE TABLE comment_vote (
+    key text,
+    vote bigint,
+    comment_id timeuuid,
+    updated timestamp,
+    PRIMARY KEY (key, vote, comment_id)
+);
+
+CREATE TABLE comment_vote_track(
+    key text,
+    comment_id timeuuid,
+    vote bigint,
+    PRIMARY KEY (key, comment_id)
+);
+
+CREATE TABLE comment_date (
+    key text,
+    updated timestamp,
+    comment_id timeuuid,
+    prev timestamp,
+    PRIMARY KEY (key, updated, comment_id)
+);
+
+CREATE TABLE comment_date_track(
+    key text,
+    comment_id timeuuid,
+    updated timestamp,
+    PRIMARY KEY (key, comment_id)
+);
+
+CREATE TABLE user_vote_comment (
+    user_id timeuuid,
+    comment_id timeuuid,
+    type text,
+    PRIMARY KEY (user_id, comment_id)
+);
+
+CREATE TABLE comment_counter (
+    id timeuuid PRIMARY KEY,
+    vote_up counter,
+    vote_down counter,
+    view counter
+);
+
+CREATE TABLE user_content_action (
+    user_id timeuuid,
+    content_id timeuuid,
+    vote text,
+    bookmark text,
+    follow text,
+    PRIMARY KEY (user_id, content_id)
+);
+
+CREATE TABLE follower (
+    key text,
+    follower_id uuid,
+    updated timestamp,
+    PRIMARY KEY (key, follower_id)
+);
+
+CREATE TABLE notify_track (
+    key text,
+    user_id uuid,
+    notify_id uuid,
+    PRIMARY KEY (key, user_id)
+);
+
+CREATE TABLE notify (
+    id timeuuid PRIMARY KEY,
+    user_id uuid,
+    type text,
+    target_id uuid,
+    title text,
+    link text,
+    action text,
+    users map<uuid, bigint>,
+    updated timestamp,
+    status boolean
+);
+
+CREATE TABLE notify_date (
+    user_id timeuuid,
+    updated timestamp,
+    notify_id uuid,
+    last_user uuid,
+    PRIMARY KEY (user_id, updated, notify_id)
+);
+
+CREATE TABLE notify_date_track(
+    user_id timeuuid,
+    notify_id timeuuid,
+    updated timestamp,
+    PRIMARY KEY (user_id, notify_id)
+);
+
+CREATE TABLE tag_counter(
+    key text,
+    tag text,
+    score counter,
+    PRIMARY KEY (key, tag)
+);
+
+CREATE TABLE alias (
+    key text,
+    alias text,
+    data text,
+    PRIMARY KEY (key, alias)
+);
+
+CREATE TABLE hub (
+    id text PRIMARY KEY,
+    name text,
+    description text,
+    logo text,
+    wallpaper text,
+    score bigint,
+    creator uuid,
+    created timestamp,
+    active boolean
+);
+
+CREATE TABLE hub_score (
+    key text,
+    score bigint,
+    hub_id text,
+    updated timestamp,
+    PRIMARY KEY (key, score, hub_id)
+);
+
+CREATE TABLE hub_score_track(
+    key text,
+    hub_id text,
+    score bigint,
+    PRIMARY KEY (key, hub_id)
+);
+
+CREATE TABLE hub_vote (
+    key text,
+    vote bigint,
+    hub_id text,
+    updated timestamp,
+    PRIMARY KEY (key, vote, hub_id)
+);
+
+CREATE TABLE hub_vote_track(
+    key text,
+    hub_id text,
+    vote bigint,
+    PRIMARY KEY (key, hub_id)
+);
+
+CREATE TABLE hub_date (
+    key text,
+    updated timestamp,
+    hub_id text,
+    prev timestamp,
+    PRIMARY KEY (key, updated, hub_id)
+);
+
+CREATE TABLE hub_date_track(
+    key text,
+    hub_id text,
+    updated timestamp,
+    PRIMARY KEY (key, hub_id)
+
+
+);
+--------------------------------------------------
+TRUNCATE content;
+TRUNCATE content_vote;
+TRUNCATE content_vote_track;
+
+TRUNCATE content_date;
+TRUNCATE content_date_track;
+
+TRUNCATE content_score;
+TRUNCATE content_score_track;
+
+TRUNCATE comment;
+TRUNCATE comment_vote;
+TRUNCATE comment_vote_track;
+
+TRUNCATE comment_date;
+TRUNCATE comment_date_track;
+
+TRUNCATE comment_score;
+TRUNCATE comment_score_track;
+
+
+TRUNCATE tag;
+
+TRUNCATE user_tag ;
+TRUNCATE tag_user ;
+TRUNCATE user_user ;
+
+TRUNCATE user;
+TRUNCATE access_token;
+TRUNCATE auth_info ;
+TRUNCATE access_token_expire ;
+TRUNCATE user_string_unique ;
+
+-------------------------------------------------
+882d1ca0-f04e-11e3-9bb7-871810acf893
+
+TRUNCATE user_tag ;
+TRUNCATE tag_user ;
+TRUNCATE user_user ;
+DELETE FROM content_score WHERE key = 'USER882d1ca0-f04e-11e3-9bb7-871810acf893';
+DELETE FROM content_vote WHERE key = 'USER882d1ca0-f04e-11e3-9bb7-871810acf893';
+DELETE FROM content_date WHERE key = 'USER882d1ca0-f04e-11e3-9bb7-871810acf893';
+
+match (u: USER)-[r:TRACK]->(t1: TAG)<-[r1:TRACK]-(u1: USER)-[r2: TRACK]->(t2) where u.email='user1@gmail.com' return t2.name, t2.id, count(*) order by count(*) DESC;
+
+match n where n.name =~ '.*(?i)ch.*' return n.name;
