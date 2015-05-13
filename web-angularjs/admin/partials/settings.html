@@ -1,0 +1,32 @@
+<form method="POST" role="form">
+	<legend>Settings</legend>
+
+	<div class="form-group">
+		<label for="">url: {{hub.url}}.cenrus.com</label>
+	</div>
+
+	<div class="form-group">
+		<label for="">Contact</label>
+		<input type="text" class="form-control" ng-model="hub.contact" placeholder="contact" />
+	</div>
+
+	<div class="form-group">
+		<label for="">Slogan</label>
+		<input type="text" class="form-control" ng-model="hub.slogan" placeholder="slogan" />
+	</div>
+
+	<div class="form-group">
+		<label for="">Description</label>
+		<input type="text" class="form-control" ng-model="hub.description" placeholder="description" />
+	</div>
+
+	<div class="form-group">
+		<label for="">Policy</label>
+		<div class="textarea-group">
+			<summernote ng-model="hub.policy" config="editorOptions"></summernote>
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary" ng-click="publish();">Publish</button>
+	<button type="button" class="btn btn-primary">Save</button>
+</form>

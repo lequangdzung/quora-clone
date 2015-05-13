@@ -1,0 +1,39 @@
+<div ng-if="!more">
+  <div ng-controller="UserTopicController">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Bạn tìm hiểu, hiểu biết về chủ đề</h3>
+          </div>
+          <div class="panel-body">
+            <div class="topics" ng-if="topics.length > 0">
+              <div class="topic-item" ng-repeat="item in topics">
+                <div ng-bind-html="item.name"></div>
+                <div class="info">{{item.followerCount}} người theo dõi</div>
+                <div class="info">{{item.questionCount}} câu hỏi</div>
+              </div>
+              <button ng-click="go()" class="btn btn-sm btn-primary">Hoàn thành</button>
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon">Chủ đề</span>
+              <input ng-change="search_topic()" type="text" ng-model="topic.name" class="form-control" />
+            </div><!-- /input-group -->
+            <div class="search-topics">
+              <ul>
+                <li class="topic-search-item" ng-repeat="item in search_results">
+                  <a href ng-click="follow(item)">
+                    <div ng-bind-html="item.highlight"></div>
+                    <div class="info">{{item.followerCount}} người theo dõi</div>
+                    <div class="info">{{item.questionCount}} câu hỏi</div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

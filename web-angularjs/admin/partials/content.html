@@ -1,0 +1,49 @@
+
+<div class="box">
+<div class="box-header">
+    <h3 class="box-title">List Contents</h3>
+</div><!-- /.box-header -->
+<div class="box-body">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 10px">#</th>
+                <th ng-click="$service.sort('title', view);" ng-class="{'sorting': $service.isSortable('title', filterFields), 'asc': (view.sort =='title' && view.sortOrder=='ASC'), 'desc': (view.sort =='title' && view.sortOrder=='DESC')}">Title</th>
+                <th>URL</th>
+                <th ng-click="$service.sort('score', view);" ng-class="{'sorting': $service.isSortable('score', filterFields), 'asc': (view.sort =='score' && view.sortOrder=='ASC'), 'desc': (view.sort =='score' && view.sortOrder=='DESC')}">Score</th>
+                <th ng-click="$service.sort('voteUp', view);" ng-class="{'sorting': $service.isSortable('voteUp', filterFields), 'asc': (view.sort =='voteUp' && view.sortOrder=='ASC'), 'desc': (view.sort =='voteUp' && view.sortOrder=='DESC')}">Vote Up</th>
+                <th ng-click="$service.sort('voteDown', view);" ng-class="{'sorting': $service.isSortable('voteDown', filterFields), 'asc': (view.sort =='voteDown' && view.sortOrder=='ASC'), 'desc': (view.sort =='voteDown' && view.sortOrder=='DESC')}">Vote Down</th>
+                <th ng-click="$service.sort('creator.display', view);" ng-class="{'sorting': $service.isSortable('creator.display', filterFields), 'asc': (view.sort =='creator.display' && view.sortOrder=='ASC'), 'desc': (view.sort =='creator.display' && view.sortOrder=='DESC')}">Creator</th>
+                <th>Tags</th>
+                <th ng-click="$service.sort('commentCount', view);" ng-class="{'sorting': $service.isSortable('commentCount', filterFields), 'asc': (view.sort =='commentCount' && view.sortOrder=='ASC'), 'desc': (view.sort =='commentCount' && view.sortOrder=='DESC')}">Comments</th>
+                <th style="width: 100px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in view.items">
+                <td>{{item.id}}</td>
+                <td> {{item.title}} </td> 
+                <td> {{item.url}} </td> 
+                <td> {{item.score}} </td> 
+                <td> {{item.voteUp}} </td> 
+                <td> {{item.voteDown}} </td> 
+                <td> <a href ng-click="$service.getMatch(view, 'creator.email', item.creator.email)">{{item.creator.display}}</a> </td> 
+                <td> 
+                    <div  ng-repeat="tag in item.tags" style="display:inline;"><a href>{{tag.title}}</a> <span ng-if="!$last">-</span></div>
+                </td> 
+                <td> {{item.commentCount}} </td> 
+                <td>
+                    <a href ng-click="$service.unpublish(item.id, view)"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div><!-- /.box-body -->
+<div class="box-footer clearfix" ng-if="view.pageNumber > 1">
+    <ul class="pagination pagination-sm no-margin pull-right">
+        <li ng-if="view.page > 0"><a href ng-click="$service.goPage(view.page - 1, view);">«</a></li>
+        <li ng-class="{active: (n == view.page)}" ng-repeat="n in [] | range:view.pageNumber"><a href ng-click="$service.goPage(n, view);">{{n+1}}</a></li>
+        <li ng-if="view.pageNumber > (view.page + 1)"><a href ng-click="$service.goPage(view.page + 1, view);">»</a></li>
+    </ul>
+</div>
+</div>

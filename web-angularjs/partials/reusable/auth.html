@@ -1,0 +1,163 @@
+<div ng-controller="authCtrl">
+  <div class="modal fade" id="authForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="login">
+    <div class="content">
+      <form class="social-form" method="post" ng-show="view.form=='social'" style="display: block;">
+        <a href ng-click="fblogin();" class="login_fb"><span>Login with Facebook</span></a>
+        <div class="create-account">
+          <p>
+             <a href ng-click="show('login');">
+            Sign in with your account </a>
+          </p>
+        </div>
+      </form>
+      <!-- BEGIN LOGIN FORM -->
+      <form class="login-form" ng-if="(view.form=='login')"  method="post">
+        <a href ng-click="fblogin();" class="login_fb"><span>Login with Facebook</span></a>
+        <h3>Login with your email</h3>
+        <div class="form-group">
+          <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+          <label class="control-label visible-ie8 visible-ie9">Email</label>
+          <div class="input-icon">
+            <i class="fa fa-user"></i>
+            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" ng-model="login.username" name="username">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label visible-ie8 visible-ie9">Password</label>
+          <div class="input-icon">
+            <i class="fa fa-lock"></i>
+            <input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" ng-model="login.password" name="password">
+          </div>
+        </div>
+        <div class="form-actions">
+          <label class="checkbox">
+          <div class="checker"><span><input type="checkbox" name="remember" value="1" ng-model="login.remember"></span></div> Remember me </label>
+          <button type="submit" class="btn green pull-right" ng-click="loginUser()">
+          Login <i class="m-icon-swapright m-icon-white"></i>
+          </button>
+        </div>
+        <div class="forget-password">
+          <h4>Forgot your password ?</h4>
+          <p>
+             no worries, click <a href ng-click="show('forgot');">
+            here </a>
+            to reset your password.
+          </p>
+        </div>
+        <div class="create-account">
+          <p>
+             Don't have an account yet ?&nbsp; <a href ng-click="show('register');">
+            Create an account </a>
+          </p>
+        </div>
+      </form>
+      <!-- END LOGIN FORM -->
+      <!-- BEGIN FORGOT PASSWORD FORM -->
+      <form class="forget-form" ng-if="(view.form=='forgot')" method="post">
+        <h3>Forget Password ?</h3>
+        <p>
+           Enter your e-mail address below to reset your password.
+        </p>
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="fa fa-envelope"></i>
+            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" ng-model="forgot.email" placeholder="Email" name="email">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="back-btn" class="btn" ng-click="show('login');">
+          <i class="m-icon-swapleft"></i> Back </button>
+          <button type="submit" class="btn green pull-right">
+          Submit <i class="m-icon-swapright m-icon-white"></i>
+          </button>
+        </div>
+      </form>
+      <!-- END FORGOT PASSWORD FORM -->
+      <!-- BEGIN REGISTRATION FORM -->
+      <form class="register-form" ng-show="view.form=='register'" method="post">
+        <h3>Sign Up</h3>
+        <p>
+           Enter your personal details below:
+        </p>
+        <div class="form-group">
+          <label class="control-label visible-ie8 visible-ie9">Full Name</label>
+          <div class="input-icon">
+            <i class="fa fa-font"></i>
+            <input class="form-control placeholder-no-fix" type="text" placeholder="Full Name" ng-model="register.display" name="display">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+          <label class="control-label visible-ie8 visible-ie9">Email</label>
+          <div class="input-icon">
+            <i class="fa fa-envelope"></i>
+            <input class="form-control placeholder-no-fix" type="text" placeholder="Email" ng-model="register.email" name="email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label visible-ie8 visible-ie9">Password</label>
+          <div class="input-icon">
+            <i class="fa fa-lock"></i>
+            <input class="form-control placeholder-no-fix" type="password" autocomplete="off" ng-model="register.password" placeholder="Password" name="password">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>
+          <div class="checker"><span><input type="checkbox" name="tnc"></span></div> I agree to the <a href="#">
+          Terms of Service </a>
+          and <a href="#">
+          Privacy Policy </a>
+          </label>
+          <div id="register_tnc_error">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button id="register-back-btn" type="button" class="btn" ng-click="show('login');">
+          <i class="m-icon-swapleft"></i> Back </button>
+          <button type="submit" id="register-submit-btn" class="btn green pull-right" ng-click="registerUser()">
+          Sign Up <i class="m-icon-swapright m-icon-white"></i>
+          </button>
+        </div>
+      </form>
+      <!-- END REGISTRATION FORM -->
+      <!-- BEGIN ENTER PASSWORD FORM -->
+      <form class="password-form" ng-if="(view.form=='password')" method="post">
+        <h3>Finish register</h3>
+        <div class="form-group">
+          <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+          <div class="input-icon">
+            <i class="fa fa-envelope"></i>
+            <input disabled="" class="form-control placeholder-no-fix" type="text" autocomplete="off" value="{{user.email}}">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="fa fa-lock"></i>
+            <input class="form-control placeholder-no-fix" type="password" autocomplete="off" ng-model="password.password" placeholder="Password" name="password">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn green pull-right" ng-click="updatePassword()">
+          Submit <i class="m-icon-swapright m-icon-white"></i>
+          </button>
+        </div>
+      </form>
+      <!-- END ENTER PASSWORD FORM -->
+
+    </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="SocialPopup">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="fb-like" data-href="" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true" data-colorscheme="dark"></div>          
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,47 @@
+
+<div ng-if="questions" class="contents">
+  <div ng-repeat="question in questions" class="content-row" ng-class="{first : $first}" id="question-{{question.id}}">
+    <ul class="vote-tools">
+      <li class="follow last"><a href data-placement="top" title="có {{question.userCount}} tham gia" tooltip><span class="ion-social-twitter"></span></a></li>
+      <li>{{question.userCount}}</li>
+    </ul>
+    <div class="content-item">
+      <h2>
+        <a class="title" href="/#!/questions/{{question.alias}}">{{question.title}}</a>
+      </h2>
+      
+      <div ng-if="question.body" class="short-desc">{{question.body}}... <a href="/#!/questions/{{question.alias}}" style="display: inline">See More</a></div>
+
+      <div class="clearfix">
+        <div class="pull-left">
+          <a ng-if="question.actions.follow != 'Y'" class="btn btn-xs btn-primary" href ng-click="userfeed.follow('question', question.id, question)" data-placement="top" title="Follow" tooltip>theo dõi ({{question.followerCount}})</a>
+          <a href ng-if="question.actions.follow == 'Y'" class="btn btn-xs btn-default" ng-click="userfeed.unfollow('question', question.id, question)" data-placement="top" title="Bo Theo Doi" tooltip>bỏ theo dõi ({{question.followerCount}})</a>
+          <a class="btn btn-xs btn-default" href="/#!/questions/{{question.alias}}?act=r">trả lời ({{question.answerCount}})</a> .
+        </div>
+        
+        <div class="btn-group dropup pull-right" role="group">
+          <button type="button" class="btn btn-xs btn-default" ng-click="CommentService.voteUp(question.comment)" ng-class="{'vote-active' : (question.comment.voteType == 'vote_up')}">
+            <span class="fa fa-bookmark-o"></span>
+          </button>
+          <button type="button" class="btn btn-xs btn-default" ng-click="CommentService.voteDown(question.comment)" ng-class="{'vote-deactive' : (comment.voteType == 'vote_down')}">
+            <span class="fa fa-share-alt"></span>
+          </button>
+        </div>
+      </div>
+
+      
+      <ul class="tags clearfix pull-right">
+        <li ng-repeat="topic in question.topics">
+          <div class="tag" ng-class="{tracked: topic.actions['follow'] == 'Y', inactive: !topic.status}" data-toggle="tooltip" data-placement="top" title="{{topic.followerCount}} dang theo doi" tooltip>
+            <a class="tag-item" href="/#!/topics/{{topics.alias}}">{{topic.title}}</a>
+            <a ng-if="topic.actions['follow'] != 'Y'" href ng-click="userfeed.follow('topic',topic.id , topic)"><i class="fa fa-check"></i></a>
+            <a href ng-if="topic.actions['follow'] == 'Y'" ng-click="userfeed.unfollow('topic',topic.id , topic)"><i class="fa fa-check"></i></a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div ng-if="more" class="view-more">
+    <a class="get-more" href ng-click="get_next()"> xem thêm </a>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+table thead th.sorting {
+    background: url("../img/sort_both.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+    cursor: pointer;
+}
+
+table thead th.sorting.asc {
+    background: url("../img/sort_asc.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+}
+
+table thead th.sorting.desc {
+    background: url("../img/sort_desc.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+}

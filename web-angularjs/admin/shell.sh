@@ -1,0 +1,1 @@
+rm -rf ~/neo4j/balloongen1_shell; cp -r ~/neo4j/balloongen1 ~/neo4j/balloongen1_shell; neo4j-shell -path=~/neo4j/balloongen1_shell/

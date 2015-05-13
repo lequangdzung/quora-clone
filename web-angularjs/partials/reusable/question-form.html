@@ -1,0 +1,82 @@
+<div ng-controller="QuestionFormController">
+	<div class="modal fade" id="askForm">
+		<div class="modal-dialog">
+			<div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h5 class="question-title">{{title}}</h5>
+	        <span ng-show="view != 'form'" class="confirm-question">"{{question.title}}"</span>
+	      </div>
+				<div class="modal-body question-form">
+					<div ng-show="state.current == 'form'">
+            <form name="questionForm">
+              <textarea ng-model="question.title" name="question" required class="question" auto-resize placeholder="Đừng chần chừ, hỏi ngay và luôn"></textarea>
+              <div ng-messages="questionForm.question.$error">
+                <span ng-message="required">Bạn chưa nhập nội dung câu hỏi?</span>
+              </div>
+              
+            </form>
+						
+						<div class="clearfix qbtn">
+              <div class="pull-right">
+                <button type="button" ng-click="confirm()" class="btn btn-primary">Tiếp Tục</button>
+                <a class="back-link" href ng-click="go_back()">quay lại</a>
+              </div>
+            </div>
+					</div>
+					<div ng-show="state.current == 'confirm'">
+						<div ng-if="exist" class="list-question">
+							<div ng-repeat="item in exist">
+								<a href=""><span ng-bind-html="item.title"></span></a>
+							</div>
+						</div>
+            <div class="clearfix qbtn">
+              <div class="pull-right">
+                <button type="button" ng-click="get_suggest_topic()" class="btn btn-primary">Câu hỏi của tôi là mới</button>	
+                <a class="back-link" href ng-click="go_back()">quay lại</a>
+              </div>
+            </div>
+						
+					</div>
+					<div ng-show="state.current == 'topic'">
+						<div class="list-topic">
+							<div ng-repeat="item in suggests" class="checkbox">
+						    <label>
+						      <input name="selectedTopics[]" ng-click="toggle_selection($index);" ng-checked="selection.indexOf($index) > -1" type="checkbox"> {{item.name}}
+						    </label>
+						  </div>
+							<div class="input-group">
+					      <input ng-change="search_topic()" type="text" ng-model="topic.name" ng-change="" class="form-control" />
+					      <span ng-if="search_status == -1" class="input-group-btn">
+					        <button class="btn btn-default" type="button" ng-click="add_topic()">Tạo mới</button>
+					      </span>
+					    </div><!-- /input-group -->
+						</div>
+						<div ng-if="search_results" class="search-topics">
+							<ul>
+								<li class="topic-search-item" ng-repeat="item in search_results">
+                  <a href ng-click="add_exist_topic(item)">
+                    <div ng-bind-html="item.highlight"></div>
+                    <div class="info">{{item.followerCount}} người theo dõi</div>
+                    <div class="info">{{item.questionCount}} câu hỏi</div>
+                  </a>
+                </li>
+                <li class="topic-new-item" ng-if="search_status == 1">
+                  <span>{{topic.name}}</span>
+                  <a href ng-click="add_topic()" class="btn btn-primary btn-xs">Tạo mới</a>
+                </li>
+							</ul>
+						</div>
+            <div class="clearfix qbtn">
+              <div class="pull-right">
+                <button type="button" ng-click="add_question()" class="btn btn-primary">Hỏi ngay</button>
+                <a class="back-link" href ng-click="go_back()">quay lại</a>
+              </div>
+            </div>
+						
+					</div>	
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>

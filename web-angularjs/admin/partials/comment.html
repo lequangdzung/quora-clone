@@ -1,0 +1,41 @@
+
+<div class="box">
+<div class="box-header">
+    <h3 class="box-title">List Comment</h3>
+</div><!-- /.box-header -->
+<div class="box-body">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 10px">#</th>
+                <th>body</th>
+                <th>Score</th>
+                <th>Vote Up - Down</th>
+                <th>Creator</th>
+                <th>Content</th>
+                <th style="width: 100px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in view.items">
+                <td>{{item.id}}</td>
+                <td> {{item.body}} </td> 
+                <td> {{item.score}} </td> 
+                <td> {{item.voteUp}} - {{item.voteDown}} </td> 
+                <td> {{item.creator}} </td> 
+                <td> {{item.content_id}} </td> 
+                <td>
+                    <a href ng-click="$service.unpublish(item.id, view)"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div><!-- /.box-body -->
+<div class="box-footer clearfix" ng-if="view.pageNumber > 1">
+    <ul class="pagination pagination-sm no-margin pull-right">
+        <li ng-if="view.page > 0"><a href ng-click="$service.goPage(view.page - 1, view);">«</a></li>
+        <li ng-class="{active: (n == view.page)}" ng-repeat="n in [] | range:view.pageNumber"><a href ng-click="$service.goPage(n, view);">{{n+1}}</a></li>
+        <li ng-if="view.pageNumber > (view.page + 1)"><a href ng-click="$service.goPage(view.page + 1, view);">»</a></li>
+    </ul>
+</div>
+</div>

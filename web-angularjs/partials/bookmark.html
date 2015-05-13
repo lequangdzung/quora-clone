@@ -1,0 +1,80 @@
+<div style="position: relative;" ng-include="'partials/cContentForm.html'" scope="" onload=""></div>
+
+<div class="labels clearfix">
+  <span class="label-item" ng-repeat="label in labels" ng-class="{'active' : (label == activedLabel)}" ng-click="UI.tabSelect($event, label);">{{label}}</span>
+  <a href ng-click="UI.addLabel()"><span class="fa fa-plus-square"></span> Add</a>
+</div>
+
+<div class="contents">
+  <div class="form">
+    <div ng-if="defaultLabel != activedLabel" class="top-right customize-btn"><a href ng-click="UI.customLabel()"><i class="fa fa-caret-down"></i></a></div>
+    <ul class="clearfix">
+      <li><a href="">Hot</a></li>
+      <li><a href="">Top</a></li>
+      <li><a href="">New</a></li>
+    </ul>
+    <div ng-if="defaultLabel != activedLabel" class="custom-label" style="display:none;">
+      <div class="topic-session">
+        <h3>Track topics</h3>
+        <ul class="filters clearfix">
+          <li class="topic-item" ng-repeat="(topic, k) in labelInfo.topic">
+            {{k}}<a href ng-click="ACT.label.removeTopic(topic)"><span class="glyphicon glyphicon-remove"></span></a>
+          </li>
+          <li ng-if="objectSize(tagsAvailable) > 0">
+            <select
+                ui-select2
+                  ng-model="data.label.topic2add"
+                  ng-options="tag as v for (tag, v) in tagsAvailable"
+                  ng-change="ACT.label.addTopic()"
+                  style="width:200px;">
+                </select>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div ng-repeat="content in contents" class="content-row" ng-class="{first : $first}" id="content-{{content.id}}">
+    <ul class="vote-tools">
+      <li class="vote-up"><a href ng-click="ACT.content.voteUp(content.id)"><span ng-class="{'vote-active' : (content.actions.vote == 'vote_up')}" class="fa fa-thumbs-up"></span></a></li>
+      <li class="vote-number">{{ content.voteUp - content.voteDown }}</li>
+      <li class="vote-down"><a href ng-click="ACT.content.voteDown(content.id)"><span ng-class="{'vote-deactive' : (content.actions.vote == 'vote_down')}" class="fa fa-thumbs-down"></span></a></li>
+    </ul>
+    <div class="content-item">
+      <h2><a class="title" href="#/contents/{{content.id}}">{{content.title}}</a></h2>
+      <div><span moment="content.updated"></span></div>
+      <div class="short-desc" ng-bind-html="content.body"></div>
+      <ul class="social-buttons clearfix">
+        <li class="comments"><a href=""><span class="fa fa-comment-o"></span>{{content.commentCount}}</a></li>
+        <li ng-if="content.actions.bookmark != 'bookmark'" class="bookmark"><a href ng-click="ACT.content.bookmark(content.id, content)"><span class="fa fa-bookmark-o"></span>Add bookmark</a></li>
+        <li ng-if="content.actions.bookmark == 'bookmark'" class="bookmark"><a href ng-click="ACT.content.delBookmark(content.id, content)"><span class="fa fa-bookmark"></span>Delete bookmark</a></li>
+        <li class="fb-like">
+          <div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="standard" data-action="like" data-show-faces="true" data-share="true" data-colorscheme="dark"></div>
+        </li>
+      </ul>
+      <ul class="tags clearfix">
+        <li ng-repeat="tag in content.tags"><a href=""><span class="topic-item">{{tag}}</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="view-more">
+    <a ng-if="needGetMore" class="get-more" href ng-click="UI.getNextPage()"> View More Content </a>
+  </div>
+</div>
+<!-- ADD LABEL MODEL -->
+<div class="modal fade" id="user-label-form">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form action="" method="POST" role="form">
+          <legend>Add your label</legend>
+        
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="create your label" ng-model="label.title">
+          </div>
+          <button type="submit" ng-click="ACT.label.addLabel();" class="btn btn-primary">Submit</button>
+          <button type="submit" ng-click="addLabel();" class="btn btn-default">Cancel</button>
+        </form>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

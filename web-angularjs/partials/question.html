@@ -1,0 +1,121 @@
+<div class="container">
+  <div class="inner-all">
+    <div class="row">
+      <div class="col-lg-9 col-md-8">
+
+      <div class="top-tool clearfix">
+        <div class="clearfix">
+          <div class="pull-left"><a href="/#!/" data-toggle="tooltip" data-placement="top" title="Tooltip on left" tooltip><i class="ion-android-folder"></i></a></div>
+        </div>
+      </div>
+
+<div ng-if="question != undefined" class="content-row" id="question-{{question.id}}">
+    <ul class="vote-tools">
+      <li class="follow last"><a href data-placement="top" title="có {{question.followerCount}} người tham gia" tooltip><span class="ion-social-twitter"></span></a></li>
+      <li>{{question.followerCount}}</li>
+    </ul>
+    <div class="content-item">        
+      <h2>
+        {{question.title}} <span class="info" timeago="question.updated">
+      </h2>
+      <div ng-if="question.body" class="short-desc">{{question.body}} <a ng-if="question.type =='link'" href="{{question.url}}" style="display: inline">See More</a></div>
+      <div class="clearfix">
+        <div class="pull-left">
+          <a ng-if="question.actions.follow != 'Y'" class="btn btn-xs btn-primary" href ng-click="userfeed.follow('question', question.id, question)" data-placement="top" title="Follow" tooltip>theo dõi ({{question.followerCount}})</a>
+          <a href ng-if="question.actions.follow == 'Y'" class="btn btn-xs btn-default" ng-click="userfeed.unfollow('question', question.id, question)" data-placement="top" title="Bo Theo Doi" tooltip>bỏ theo dõi ({{question.followerCount}})</a>
+        </div>
+        
+        <div class="btn-group dropup pull-right" role="group">
+          <button type="button" data-placement="top" title="bình luận" tooltip class="btn btn-xs btn-default" ng-click="userfeed.show_comment('question', question.id, question)">
+            <span class="fa fa-comments"></span> {{question.commentCount}}
+          </button>
+          <button type="button" data-placement="top" title="lưu lại" tooltip class="btn btn-xs btn-default" ng-click="userfeed.bookmark('question', question.id, question)">
+            <span class="fa fa-bookmark-o"></span>
+          </button>
+          <button type="button" data-placement="top" title="chia sẻ" tooltip class="btn btn-xs btn-default" ng-click="userfeed.share('question', question.id, question)" >
+            <span class="fa fa-share-alt"></span>
+          </button>
+        </div>
+      </div>
+      <ng-include src="'partials/reusable/comment.html'"></ng-include>
+    </div>
+
+  <div>
+    <div class="reply" style="display: none">
+      <form role="form">
+        <summernote ng-model="input.body" config="editorOptions" ></summernote>
+      </form>
+      <button ng-click="addAnswer()" type="submit" class="btn btn-primary btn-sm ">trả lời</button>
+
+    </div><!-- /.reply -->
+    <div class="reply-front">
+      <div ng-click="showAnswerForm()">
+        <a href ng-click="showAnswerForm()">Trả lời</a>
+      </div>
+    </div>
+    
+
+    <div class="answer-header clearfix">
+      <div class="pull-left">
+        có {{question.answerCount}} câu trả lời
+      </div>
+      <div class="pull-right filters">
+        <a href ng-class="{actived: filter =='hot'}" ng-click="afilter('hot');">hay nhất</a> - <a href ng-class="{actived: filter =='top'}" ng-click="afilter('top');">top</a> - <a href ng-class="{actived: filter =='new'}" ng-click="afilter('new');">mới nhất</a>
+      </div>
+    </div>
+
+    <div ng-repeat="answer in question.answers" id="answer-{{answer.id}}">
+      <div ng-if="question.answers" class="answer">
+        <div class="info clearfix">
+          <div class="pull-left avatar noavatar">
+            <span class="ion-person"></span>
+          </div>
+          <div class="pull-left">
+            <div class="author" ng-class="{followed: (answer.creator.actions['follow'] == 'Y')}">
+              <a href="/#!/users/{{answer.creator.alias}}">{{answer.creator.display}}</a>
+              <a ng-if="!userfeed.isOwner(answer.creator.id) && answer.creator.actions['follow'] == 'Y'" href ng-click="userfeed.unfollow('user',answer.creator.id , answer.creator)"><i class="fa fa-check"></i></a> 
+              <a ng-if="!userfeed.isOwner(answer.creator.id) && answer.creator.actions['follow'] != 'Y'" href ng-click="userfeed.follow('user',answer.creator.id , answer.creator)"><i class="fa fa-check"></i></a> 
+              | <span class="info" timeago="answer.updated">
+            </div>
+          </div>
+        </div>
+        <div ng-bind-html="answer.body"></div>
+        <p moment="question.question.updated" class="text-muted reply-time"></p>
+        <div class="clearfix">
+          <div class="pull-left">
+            <button type="button" class="btn btn-xs btn-primary" ng-click="voteUp('answer', answer.id, answer.actions['vote'] , answer)" ng-class="{'actived' : (answer.actions['vote'] == 'up')}"><span class="fa fa-thumbs-up"></span> Hay ({{ answer.voteUp}})</button>
+          </div>
+          <div class="pull-right">
+            <div class="btn-group actions" role="group">
+              <button type="button" class="btn btn-xs btn-default" ng-click="voteDown('answer', answer.id, answer.actions['vote'], answer)" ng-class="{'deactived' : (answer.actions['vote'] == 'down')}"><span class="fa fa-thumbs-down"></span></button>
+              <button type="button" data-placement="top" title="bình luận" tooltip class="btn btn-xs btn-default" ng-click="userfeed.show_comment('question', question.id, question)">
+                <span class="fa fa-comments"></span> {{question.commentCount}}
+              </button>
+              <button type="button" data-placement="top" title="lưu lại" tooltip class="btn btn-xs btn-default" ng-click="userfeed.bookmark('question', question.id, question)">
+                <span class="fa fa-bookmark-o"></span>
+              </button>
+              <button type="button" data-placement="top" title="chia sẻ" tooltip class="btn btn-xs btn-default" ng-click="userfeed.share('question', question.id, question)" >
+                <span class="fa fa-share-alt"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div><!-- /.reply -->
+      
+    <div class="view-more">
+      <a ng-if="more" class="get-more" href ng-click="more();"> xem thêm </a>
+    </div>
+  </div>
+</div>
+
+
+        </div>
+
+      <div class="col-md-4 col-lg-3">
+        <ng-include src="'partials/question-stats.html'" scope="" onload=""></ng-include>
+      </div>
+    </div>
+  </div>
+</div>

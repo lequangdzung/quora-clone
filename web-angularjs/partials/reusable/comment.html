@@ -1,0 +1,22 @@
+<div ng-if="question.show_comment" class="comment-wrapper">
+  <div class="comment-input">
+    <div class="avatar noavatar">
+      <span class="ion-person"></span>
+    </div>
+    <div class="comment-line">
+      <textarea ng-model="comment_body" auto-resize="" style="height: 30px" class="comment"></textarea>
+    </div>
+    <button ng-click="userfeed.add_comment('question', question.id, question, comment_body)">bình luận</button>
+  </div>
+	<div class="comment-item clearfix" ng-repeat="comment in question.comments">
+    <div class="comment-item-wrapper">
+      <div class="avatar noavatar pull-left">
+        <span class="ion-person"></span>
+      </div>
+      <div class="author" ng-class="{followed: (comment.creator.actions['follow'] == 'Y')}">
+        <a href="/#!/users/{{answer.creator.alias}}">{{comment.creator.display}}</a><a href ng-click="userfeed.follow('user',comment.creator.id , comment.creator)"><i ng-if="!tracker.isOwner(question.comment.creator.id)" class="fa fa-check"></i></a> <span class="info" timeago="comment.updated">
+      </div>
+      <div class="comment-item-body">{{comment.body}}</div>
+    </div>
+	</div>
+</div>

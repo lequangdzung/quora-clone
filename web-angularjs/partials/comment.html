@@ -1,0 +1,31 @@
+<!-- Nav tabs -->
+<div ng-controller="CommentController">
+	<ul class="nav nav-tabs" role="tablist">
+	  <li ng-class="{'active' : (view.filter == 'hot')}"><a href role="tab" data-toggle="tab"  ng-click="loading.filter = 'hot'">Hot</a></li>
+	  <li ng-class="{'active' : (view.filter == 'top')}"><a href role="tab" data-toggle="tab"  ng-click="loading.filter = 'top'">Top</a></li>
+	  <li ng-class="{'active' : (view.filter == 'new')}"><a href role="tab" data-toggle="tab"  ng-click="loading.filter = 'new'">New</a></li>
+	</ul>
+
+	<!-- Tab panes -->
+	<div class="tab-content">
+	  <div></div>
+	  <div>
+	  	<ul class="timeline-option">
+	  		<li class="option-row" ng-repeat="comment in view.comments" id="comment-{{comment.id}}">
+	  		  <div class="comment-vote-tools">
+	  		    <span class="number">{{ comment.voteUp - comment.voteDown }}</span>
+	  		    <ul class="clearfix vote-control">
+	  		      <li class="up"><a href ng-click="CommentService.voteUp(comment)" ng-class="{'vote-active' : (comment.voteType == 'vote_up')}"><span class="fa fa-thumbs-up"></span></a></li>
+	  		      <li class="down" ><a href ng-click="CommentService.voteDown(comment)"  ng-class="{'vote-deactive' : (comment.voteType == 'vote_down')}"><span class="fa fa-thumbs-down"></a></span></li>
+	  		    </ul>
+	  		  </div>
+	  		  
+	  		  <div class="reply">
+	  		    <p><strong><a href="#fakelink">{{comment.creator.display}}</a></strong> {{comment.body}}</p>
+	  		    <p moment="content.updated" class="text-muted reply-time"></p>
+	  		  </div><!-- /.reply -->
+	  		</li>
+	  	</ul>
+	  </div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+<div class="widget similar-track">
+  <div class="widget-heading"><h5>Thông tin câu hỏi</h5></div>
+  <div class="widget-body">
+    <ul>
+    	<li class="clearfix" ng-repeat="topic in question.topics">
+    		<div class="topic-item">
+          <h4>
+            <a href="/!#/topics/{{topic.alias}}">{{topic.name}}</a>
+          </h4>
+          <a ng-if="topic.actions['follow'] == 'Y'" href ng-click="userfeed.unfollow('topic', topic.id , topic)"><i class="fa fa-check"></i></a> 
+          <a ng-if="topic.actions['follow'] != 'Y'" href ng-click="userfeed.follow('topic', topic.id , topic)"><i class="fa fa-check"></i></a> 
+        </div>
+        
+        
+    		<div class="info">{{topic.followerCount}} người theo dõi</div>
+        <div class="info">{{topic.questionCount}} câu hỏi</div>
+    	</li>
+    </ul>
+  </div>
+</div>
